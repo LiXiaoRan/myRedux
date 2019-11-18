@@ -8,6 +8,39 @@ let appState = {
         color: "blue"
     }
 };
+function dispatch(action) {
+    switch (action.type) {
+        case 'UPDATE_TITLE_TEXT':
+            appState.title.text = action.text
+            break
+        case 'UPDATE_TITLE_COLOR':
+            appState.title.color = action.color
+            break
+        default:
+            break
+    }
+}
+
+function createStore(state,stateChanger) {
+    //抽取出来createStore
+    let getStore=()=>state;
+    let dispatch=(action)=>stateChanger(state,action);
+    return {getStore,dispatch}
+}
+
+
+function  stateChanger(state,action) {
+    switch (action.type) {
+        case 'UPDATE_TITLE_TEXT':
+            state.title.text = action.text
+            break
+        case 'UPDATE_TITLE_COLOR':
+            state.title.color = action.color
+            break
+        default:
+            break
+    }
+}
 
 function renderAPP(appState) {
     renderTitle(appState.title);
@@ -26,23 +59,11 @@ function renderContent(content) {
     contentDOM.style.color = content.color;
 }
 
-function dispatch(action) {
-    switch (action.type) {
-        case 'UPDATE_TITLE_TEXT':
-            appState.title.text = action.text
-            break
-        case 'UPDATE_TITLE_COLOR':
-            appState.title.color = action.color
-            break
-        default:
-            break
-    }
-}
 
+let store=createStore(appState,stateChanger);
 
-
-renderAPP(appState);
-dispatch({ type: 'UPDATE_TITLE_TEXT', text: '《react js 书》' }); //修改标题文字
-dispatch({ type: 'UPDATE_TITLE_COLOR', color: 'blue' }) // 修改标题颜色
-renderAPP(appState);
+renderAPP(store.getStore());
+store.dispatch({ type: 'UPDATE_TITLE_TEXT', text: '《react js 书》' }); //修改标题文字
+store.dispatch({ type: 'UPDATE_TITLE_COLOR', color: 'blue' }) // 修改标题颜色
+renderAPP(store.getStore());
 

@@ -9,9 +9,6 @@ let appState = {
     }
 };
 
-renderAPP(appState);
-
-
 function renderAPP(appState) {
     renderTitle(appState.title);
     renderContent(appState.content);
@@ -26,7 +23,26 @@ function renderTitle(title) {
 function renderContent(content) {
     let contentDOM = document.getElementById("content");
     contentDOM.innerHTML = content.text;
-    contentDOM.style.olor = content.color;
+    contentDOM.style.color = content.color;
 }
 
+function dispatch(action) {
+    switch (action.type) {
+        case 'UPDATE_TITLE_TEXT':
+            appState.title.text = action.text
+            break
+        case 'UPDATE_TITLE_COLOR':
+            appState.title.color = action.color
+            break
+        default:
+            break
+    }
+}
+
+
+
+renderAPP(appState);
+dispatch({ type: 'UPDATE_TITLE_TEXT', text: '《react js 书》' }); //修改标题文字
+dispatch({ type: 'UPDATE_TITLE_COLOR', color: 'blue' }) // 修改标题颜色
+renderAPP(appState);
 

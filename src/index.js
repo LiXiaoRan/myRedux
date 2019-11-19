@@ -23,9 +23,16 @@ function dispatch(action) {
 
 function createStore(state,stateChanger) {
     //抽取出来createStore
+    let listeners=[]
+    let subscribe=(listener)=>listeners.push(listener);
     let getStore=()=>state;
-    let dispatch=(action)=>stateChanger(state,action);
-    return {getStore,dispatch}
+    let dispatch=(action)=>{
+        stateChanger(state,action);
+        listeners.forEach(listener => {
+            listener();
+        });
+    };
+    return {getStore,dispatch,subscribe}
 }
 
 
@@ -62,8 +69,11 @@ function renderContent(content) {
 
 let store=createStore(appState,stateChanger);
 
-renderAPP(store.getStore());
+store.subscribe(()=>renderAPP(store.getStore()));
+
+// renderAPP(store.getStore());
+
 store.dispatch({ type: 'UPDATE_TITLE_TEXT', text: '《react js 书》' }); //修改标题文字
-store.dispatch({ type: 'UPDATE_TITLE_COLOR', color: 'blue' }) // 修改标题颜色
-renderAPP(store.getStore());
+store.dispatch({ type: 'UPDATE_TITLE_COLOR', color: 'green' }) // 修改标题颜色
+// renderAPP(store.getStore());
 

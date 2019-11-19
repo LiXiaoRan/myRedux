@@ -14,7 +14,7 @@ function createStore(reducer) {
   return { getState, dispatch, subscribe };
 }
 
-function stateChanger(state, action) {
+function reducer(state, action) {
     if (!state) {
         //初始化state
         return {
@@ -76,7 +76,7 @@ function renderContent(newContent, oldContent = {}) {
   contentDOM.style.color = newContent.color;
 }
 
-const store = createStore(stateChanger);
+const store = createStore(reducer);
 let oldState = store.getState(); // 缓存旧的 state
 store.subscribe(() => {
   let newState = store.getState(); // 数据可能变化，获取新的 state
